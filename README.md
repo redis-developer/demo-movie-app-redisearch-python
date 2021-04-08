@@ -2,90 +2,95 @@
 
 The goal of this application is to show how to develop a RediSearch application with Python.
 
-This project is a Spring Boot application.
+This project is a Flask application.
 
-This application uses [JRediSearch](https://github.com/RediSearch/JRediSearch) that is based on [Jedis](https://github.com/xetorthio/jedis).
+This application uses [redisearch-py](https://github.com/RediSearch/redisearch-py) client.
 
 This application exposes various endpoint that are directly consumable in a front end.
 
 ## How it works?
+
 ### Main page
+
 ![img.png](docs/img.png)
 
-
-***Example: Get 'Action' Movies released in 2015-2020 and sort by Rating desc***
+**_Example: Get 'Action' Movies released in 2015-2020 and sort by Rating desc_**
 
 Select necessary parameters from a dropdown lists via UI;
 
 Redisearch query:
+
 ```
 > FT.SEARCH idx:movie "@genre:{Action} @release_year:[2015 2020] SORTBY rating desc"
 ```
-___
+
+---
+
 ### Basic Search
 
 ![basic_search.png](docs/basic_search.png)
 
-Enter any search string for the movie database for example ```@genre:{Drama} @release_year:[1990 1995]```
+Enter any search string for the movie database for example `@genre:{Drama} @release_year:[1990 1995]`
 
 **Some Sample Queries**:
 
-***Fuzzy Search 'empre', for 'Empire''***
+**_Fuzzy Search 'empre', for 'Empire''_**
 
-Search: ```%empre%```
+Search: `%empre%`
 
 ```
 > FT.SEARCH idx:movie "%empre% "
 ```
 
-***All 'Action' Movies***
+**_All 'Action' Movies_**
 
-Search: ```@genre:{Action}``` 
+Search: `@genre:{Action}`
 
 ```
 > FT.SEARCH idx:movie "@genre:{Action} "
 ```
 
-***All movies relaesed in 2000***
+**_All movies relaesed in 2000_**
 
-Search: ```@release_year:[2000 2000]```
+Search: `@release_year:[2000 2000]`
 
 ```
 > FT.SEARCH idx:movie "@release_year:[2000 2000] "
 ```
 
-***'Drama' from 2010 to 2020***
+**_'Drama' from 2010 to 2020_**
 
-Search: ```@genre:{Drama} @release_year:[2010 2020]```
+Search: `@genre:{Drama} @release_year:[2010 2020]`
 
 ```
 > FT.SEARCH idx:movie "@genre:{Drama} @release_year:[2010 2020] "
 ```
 
-***Star Wars Movies***
+**_Star Wars Movies_**
 
-Search: ```star wars```
+Search: `star wars`
 
 ```
 > FT.SEARCH idx:movie "star wars "
 ```
 
-***Star Wars movies that does not mention Jedi***
+**_Star Wars movies that does not mention Jedi_**
 
-Search: ```star wars -jedi```
+Search: `star wars -jedi`
 
 ```
 > FT.SEARCH idx:movie "star wars -jedi "
 ```
-___
+
+---
 
 ### Faceted Search
 
 ![faceted_search.png](docs/faceted_search.png)
 
-**Example : *All the movies that contains the string "`war`"***
+**Example : _All the movies that contains the string "`war`"_**
 
-Search: ```war```
+Search: `war`
 Release years: 1960-2020
 Rating: 0-10
 
@@ -109,12 +114,13 @@ Redisearch query:
 
 The FT.SEARCH commands returns a list of results starting with the number of results, then the list of elements (keys & fields).
 
-As you can see the movie *Star Wars: Episode V - The Empire Strikes Back* is found, even though you used only the word “war” to match “Wars” in the title. This is because the title has been indexed as text, so the field is [tokenized](https://oss.redislabs.com/redisearch/Escaping/) and [stemmed](https://oss.redislabs.com/redisearch/Stemming/).
+As you can see the movie _Star Wars: Episode V - The Empire Strikes Back_ is found, even though you used only the word “war” to match “Wars” in the title. This is because the title has been indexed as text, so the field is [tokenized](https://oss.redislabs.com/redisearch/Escaping/) and [stemmed](https://oss.redislabs.com/redisearch/Stemming/).
 
 ---
-**Example : *All the movies that contains the string "`war` but NOT the `jedi` one"***
 
-Search: ```war -jedi```
+**Example : _All the movies that contains the string "`war` but NOT the `jedi` one"_**
+
+Search: `war -jedi`
 
 Release years: 1960-2020
 
@@ -123,6 +129,7 @@ Rating: 0-10
 Adding the string `-jedi` (minus) will ask the query engine not to return values that contain `jedi`.
 
 Redisearch query:
+
 ```
 > FT.SEARCH idx:movie "war -jedi @release_year:[1960 2020] @rating:[0 10]"
 1) (integer) 1
@@ -134,9 +141,10 @@ Redisearch query:
 ```
 
 ---
-**Example : *All the movies that contains the string "`gdfather` using fuzzy search"***
 
-**Search**: ```%gdfather%```
+**Example : _All the movies that contains the string "`gdfather` using fuzzy search"_**
+
+**Search**: `%gdfather%`
 
 Release years: 1960-2020
 
@@ -157,19 +165,21 @@ Redisearch query:
 ```
 
 ---
-**Example  : *All `Thriller` movies"***
+
+**Example : _All `Thriller` movies"_**
 
 The `genre` fields is indexed as a TAG and allows exact match queries.
 
-The syntax to query a TAG field is  @field_name:{value}
+The syntax to query a TAG field is @field_name:{value}
 
-Search: ```@genre:{Thriller}```
+Search: `@genre:{Thriller}`
 
 Release years: 1960-2020
 
 Rating: 0-10
 
 Redisearch query:
+
 ```
 > FT.SEARCH idx:movie "@genre:{Thriller}" @release_year:[1960 2020] @rating:[0 10]
 1) (integer) 1
@@ -181,9 +191,10 @@ Redisearch query:
 ```
 
 ---
-**Example : *All `Thriller` or `Action` movies"***
 
-Search: ```@genre:{Thriller|Action}```
+**Example : _All `Thriller` or `Action` movies"_**
+
+Search: `@genre:{Thriller|Action}`
 
 Release years: 1960-2020
 
@@ -214,9 +225,10 @@ Redisearch query:
 You can find more information about the Tag filters in [the documentation](https://oss.redislabs.com/redisearch/master/Query_Syntax/#tag_filters).
 
 ---
-**Example : *All `Thriller` or `Action` movies that does not have `Jedi` in the title"***
 
-Search: ```@genre:{Thriller|Action} @title:-jedi```
+**Example : _All `Thriller` or `Action` movies that does not have `Jedi` in the title"_**
+
+Search: `@genre:{Thriller|Action} @title:-jedi`
 
 Release years: 1960-2020
 
@@ -247,17 +259,16 @@ As a Redis developer, one of the first things to look when building your applica
 
 A common way of defining the keys in Redis is to use specific patterns in them. For example in this application where the database will probably deal with various business objects: movies, actors, theaters, users, ... we can use the following pattern:
 
-* `business_object:key`
+- `business_object:key`
 
 For example:
-* `movie:001` for the movie with the id 001
-* `user:001` the user with the id 001
 
+- `movie:001` for the movie with the id 001
+- `user:001` the user with the id 001
 
 and for the movies information you should use a Redis [Hash](https://redis.io/topics/data-types#hashes).
 
 A Redis Hash allows the application to structure all the movie attributes in individual fields; also RediSearch will index the fields based on the index definition.
-
 
 **Movies**
 
@@ -265,15 +276,15 @@ The file `/redisearch-docker/dataset/import_movies.redis` is a script that creat
 
 The movie hashes contain the following fields.
 
-* **`movie:id`** : The unique ID of the movie, internal to this database (used as the key of the hash)
-* **`title`** : The title of the movie.
-* **`plot`** : A summary of the movie.
-* **`genre`** : The genre of the movie, for now a movie will only have a single genre.
-* **`release_year`** : The year the movie was released as a numerical value.
-* **`rating`** : A numeric value representing the public's rating for this movie.
-* **`votes`** : Number of votes.
-* **`poster`** : Link to the movie poster.
-* **`imdb_id`** : id of the movie in the [IMDB](https://imdb.com) database.
+- **`movie:id`** : The unique ID of the movie, internal to this database (used as the key of the hash)
+- **`title`** : The title of the movie.
+- **`plot`** : A summary of the movie.
+- **`genre`** : The genre of the movie, for now a movie will only have a single genre.
+- **`release_year`** : The year the movie was released as a numerical value.
+- **`rating`** : A numeric value representing the public's rating for this movie.
+- **`votes`** : Number of votes.
+- **`poster`** : Link to the movie poster.
+- **`imdb_id`** : id of the movie in the [IMDB](https://imdb.com) database.
 
 <details> 
   <summary>Sample Data: <b>movie:521</b></summary>
@@ -343,10 +354,10 @@ The file `/redisearch-docker/dataset/import_actors.redis` is a script that creat
 
 The movie hashes contain the following fields.
 
-* **`actor:id`** : The unique ID of the actor
-* **`first_name`** : The first name of the actor.
-* **`last_name`** : The last name of the actor.
-* **`date_of_birth`** : The birth year of the actor
+- **`actor:id`** : The unique ID of the actor
+- **`first_name`** : The first name of the actor.
+- **`last_name`** : The last name of the actor.
+- **`date_of_birth`** : The birth year of the actor
 
 <details> 
   <summary>Sample Data: <b>actor:521</b></summary>
@@ -386,18 +397,18 @@ The file `/redisearch-docker/dataset/import_users.redis` is a script that create
 
 The user hashes contain the following fields.
 
-* **`user:id`** : The unique ID of the user.
-* **`first_name`** : The first name of the user.
-* **`last_name`** : The last name of the user.
-* **`email`** : The email of the user.
-* **`gender`** : The gender of the user (`female`/`male`).
-* **`country`** : The country name of the user.
-* **`country_code`** : The country code of the user.
-* **`city`** : The city of the user.
-* **`longitude`** : The longitude of the user.
-* **`latitude`** : The latitude of the user.
-* **`last_login`** : The last login time for the user, as EPOC time.
-* **`ip_address`** : The IP address of the user.
+- **`user:id`** : The unique ID of the user.
+- **`first_name`** : The first name of the user.
+- **`last_name`** : The last name of the user.
+- **`email`** : The email of the user.
+- **`gender`** : The gender of the user (`female`/`male`).
+- **`country`** : The country name of the user.
+- **`country_code`** : The country code of the user.
+- **`city`** : The city of the user.
+- **`longitude`** : The longitude of the user.
+- **`latitude`** : The latitude of the user.
+- **`last_login`** : The last login time for the user, as EPOC time.
+- **`ip_address`** : The IP address of the user.
 
 <details> 
  <summary>Sample Data: <b>user:3233</b></summary>
@@ -489,14 +500,13 @@ Create the index with the following command:
 
 Before running some queries let's look at the command in detail:
 
-* [`FT.CREATE`](https://oss.redislabs.com/redisearch/master/Commands/#ftcreate) : creates an index with the given spec. The index name will be used in all the key names so keep it short.
-* `idx:movie` : the name of the index
-* `ON hash` : the type of structure to be indexed. *Note that in RediSearch 2.0 only hash structures are supported, this parameter will accept other Redis data types in future as RediSearch is updated to index them*
-* `PREFIX 1 "movie:"` : the prefix of the keys that should be indexed. This is a list, so since we want to only index movie:* keys the number is 1. Suppose you want to index movies and tv_show that have the same fields, you can use: `PREFIX 2 "movie:" "tv_show:"`
-* `SCHEMA ...`: defines the schema, the fields and their type, to index, as you can see in the command, we are using [TEXT](https://oss.redislabs.com/redisearch/Query_Syntax/#a_few_query_examples), [NUMERIC](https://oss.redislabs.com/redisearch/Query_Syntax/#numeric_filters_in_query) and [TAG](https://oss.redislabs.com/redisearch/Query_Syntax/#tag_filters), and [SORTABLE](https://oss.redislabs.com/redisearch/Sorting/) parameters.
+- [`FT.CREATE`](https://oss.redislabs.com/redisearch/master/Commands/#ftcreate) : creates an index with the given spec. The index name will be used in all the key names so keep it short.
+- `idx:movie` : the name of the index
+- `ON hash` : the type of structure to be indexed. _Note that in RediSearch 2.0 only hash structures are supported, this parameter will accept other Redis data types in future as RediSearch is updated to index them_
+- `PREFIX 1 "movie:"` : the prefix of the keys that should be indexed. This is a list, so since we want to only index movie:\* keys the number is 1. Suppose you want to index movies and tv_show that have the same fields, you can use: `PREFIX 2 "movie:" "tv_show:"`
+- `SCHEMA ...`: defines the schema, the fields and their type, to index, as you can see in the command, we are using [TEXT](https://oss.redislabs.com/redisearch/Query_Syntax/#a_few_query_examples), [NUMERIC](https://oss.redislabs.com/redisearch/Query_Syntax/#numeric_filters_in_query) and [TAG](https://oss.redislabs.com/redisearch/Query_Syntax/#tag_filters), and [SORTABLE](https://oss.redislabs.com/redisearch/Sorting/) parameters.
 
 You can find information about the [FT.CREATE](https://oss.redislabs.com/redisearch/Commands/#ftcreate) command in the [documentation](https://oss.redislabs.com/redisearch/Commands/#ftcreate).
-
 
 You can look at the index information with the following command:
 
@@ -508,16 +518,14 @@ You can look at the index information with the following command:
 
 One of the goals of RediSearch is to provide rich querying capabilities such as:
 
-* simple and complex conditions
-* sorting
-* pagination
-* counting
-
+- simple and complex conditions
+- sorting
+- pagination
+- counting
 
 ### Conditions
 
 The best way to start to work with RediSearch query capabilities is to look at the various conditions options.
-
 
 <details> 
   <summary>
@@ -556,13 +564,14 @@ The best way to start to work with RediSearch query capabilities is to look at t
 The first line contains the number of documents (`4`) that match the query condition, then the list of movies.
 
 This query is a "fieldless" condition, this means that the query engine has:
-* searched in all the TEXT fields of the index(`title` and `plot`)
-* for the word `heat` and related words, this is why the movie:736 is returned since it has the word `heated` in the plot ([stemming](https://oss.redislabs.com/redisearch/Stemming/))
-* returned the result sorted by score, remember that the title has a weight of 1.0, and the plot a weight of 0.5. So when the word or related words are found in the title the score is larger.
+
+- searched in all the TEXT fields of the index(`title` and `plot`)
+- for the word `heat` and related words, this is why the movie:736 is returned since it has the word `heated` in the plot ([stemming](https://oss.redislabs.com/redisearch/Stemming/))
+- returned the result sorted by score, remember that the title has a weight of 1.0, and the plot a weight of 0.5. So when the word or related words are found in the title the score is larger.
+
 ---
+
 </details>
-
-
 
 <details> 
   <summary>
@@ -592,8 +601,8 @@ In this case you have to set the criteria to a the field title using the `@title
 So only 2 movies are returned.
 
 ---
-</details>
 
+</details>
 
 <details> 
   <summary>
@@ -632,9 +641,8 @@ You can do test this with the following queries:
 As you can see the first query only searches for woman in the title and returns two movies "Heat" and "California Heat", where the second query eliminates "California Heat" from the list since the plot contains the word `woman`.
 
 ---
+
 </details>
-
-
 
 <details> 
   <summary>
@@ -644,15 +652,15 @@ As you can see the first query only searches for woman in the title and returns 
   </summary>
 
 As you have seen earlier the movie index contains:
-* the `title` and plot as TEXT
-* the `genre` as TAG.
+
+- the `title` and plot as TEXT
+- the `genre` as TAG.
 
 You saw earlier how to place a condition on a TEXT field.
 
 The [TAG](https://oss.redislabs.com/redisearch/Tags/) is a little bit different as the index engine does not do any stemming.
 
 To set a condition on this field you must use the `@field:{value}` notation, the `{...}` indicates that it is a TAG condition
-
 
 ```
 >  FT.SEARCH "idx:movie" "@title:(heat) @genre:{Drama} " RETURN 3 title plot genre
@@ -668,10 +676,9 @@ To set a condition on this field you must use the `@field:{value}` notation, the
 
 As you can see this query applies conditions to two different fields with an exact match on the TAG.
 
-TAG is the structure to use when you want to do exact matches on strings/words.
----
-</details>
+## TAG is the structure to use when you want to do exact matches on strings/words.
 
+</details>
 
 <details> 
   <summary>
@@ -681,7 +688,6 @@ TAG is the structure to use when you want to do exact matches on strings/words.
   </summary>
 
 This is similar to the previous query, you can pass a list of values with the `|` to represent the OR.
-
 
 ```
 > FT.SEARCH "idx:movie" "@title:(heat)  @genre:{Drama|Comedy} " RETURN 3 title plot genre
@@ -703,7 +709,6 @@ This is similar to the previous query, you can pass a list of values with the `|
    6) "Comedy"
 ```
 
-
 You can also put the '|' between all the conditions to search for example all movies that have "heat" in the title, or that are Comedy or that are Drama. The query will look like:
 
 ```
@@ -711,8 +716,8 @@ FT.SEARCH "idx:movie" "@title:(heat) | @genre:{Drama|Comedy} " RETURN 3 title pl
 ```
 
 ---
-</details>
 
+</details>
 
 <details> 
   <summary>
@@ -752,17 +757,18 @@ In this query it will be two conditions with an OR (`|`).
    6) "Thriller"
 ```
 
-
 ---
+
 </details>
 
 Summary
 
-* Fieldless queries apply to all TEXT fields and use the words and their base form (stemming)
-* To apply a condition to a specific field you must use the `@field:` notation
-* Multiple conditions are "intersection" (AND condition), to do a "union" (OR condition), you have to use the "`|`" character.
+- Fieldless queries apply to all TEXT fields and use the words and their base form (stemming)
+- To apply a condition to a specific field you must use the `@field:` notation
+- Multiple conditions are "intersection" (AND condition), to do a "union" (OR condition), you have to use the "`|`" character.
 
-----
+---
+
 ### Sort
 
 A very common use case when querying data is to sort the data on a specific field, and paginate over the result.
@@ -794,11 +800,12 @@ The FT.SEARCH command, by default, returns the first ten documents. You will see
 
 You can only use one SORTBY clause in an FT.SEARCH query, if you want to sort on multiple fields, for example sorting movies by `genre` ascending and `release_year` descending, you have to use an FT.AGGREGATE, this is covered in the [next section](008-aggregation.md).
 
-Note: The field used in the [SORTBY](https://oss.redislabs.com/redisearch/Sorting/#specifying_sortby) should be part of the index schema and defined as SORTABLE.
----
+## Note: The field used in the [SORTBY](https://oss.redislabs.com/redisearch/Sorting/#specifying_sortby) should be part of the index schema and defined as SORTABLE.
+
 </details>
 
-----
+---
+
 ### Paginate
 
 <details> 
@@ -814,7 +821,7 @@ Note: The field used in the [SORTBY](https://oss.redislabs.com/redisearch/Sortin
      2) "1966"
      3) "title"
      4) "Texas,Adios"
-...  
+...
 200) "movie:12"
 201) 1) "release_year"
      2) "2014"
@@ -823,23 +830,24 @@ Note: The field used in the [SORTBY](https://oss.redislabs.com/redisearch/Sortin
 ```
 
 The result is very similar to the previous query:
-* 186 documents found
-* the first document is the oldest one, released in 1966
-* the latest movie of the batch was released in 2014
 
+- 186 documents found
+- the first document is the oldest one, released in 1966
+- the latest movie of the batch was released in 2014
 
 To paginate to the next batch you need to change the limit as follows:
 
 ```
 > FT.SEARCH "idx:movie" "@genre:{Action}" LIMIT 100 200  SORTBY release_year ASC RETURN 2 title release_year
 ```
+
 ---
+
 </details>
 
+---
 
-----
 ### Count
-
 
 <details> 
   <summary>
@@ -853,9 +861,10 @@ Based on the sample queries that you have seen earlier, if you specify `LIMIT 0 
 
 1) (integer) 186
 ```
----
-</details>
 
+---
+
+</details>
 
 <details> 
   <summary>
@@ -879,10 +888,10 @@ You can also use the following syntax:
 ```
 
 ---
+
 </details>
 
-
-----
+---
 
 ## How to run it locally?
 
@@ -904,10 +913,8 @@ This Docker Compose will start:
 
 Once started you can access the application and its services using the following URLs:
 
-* http://localhost:8084
-* http://localhost:8087/api/1.0/movies/search?q=star&offset=0&limit=10
-
-
+- http://localhost:8084
+- http://localhost:8087/api/1.0/movies/search?q=star&offset=0&limit=10
 
 #### Stop and Delete Everything
 
