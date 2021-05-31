@@ -12,7 +12,7 @@ This application exposes various endpoint that are directly consumable in a fron
 
 ### Main page
 
-![img.png](docs/img.png)
+![img.png](https://github.com/redis-developer/demo-movie-app-redisearch-python/tree/master/docs/img.png)
 
 **_Example: Get 'Action' Movies released in 2015-2020 and sort by Rating desc_**
 
@@ -28,7 +28,7 @@ Redisearch query:
 
 ### Basic Search
 
-![basic_search.png](docs/basic_search.png)
+![basic_search.png](https://github.com/redis-developer/demo-movie-app-redisearch-python/tree/master/docs/basic_search.png)
 
 Enter any search string for the movie database for example `@genre:{Drama} @release_year:[1990 1995]`
 
@@ -86,7 +86,7 @@ Search: `star wars -jedi`
 
 ### Faceted Search
 
-![faceted_search.png](docs/faceted_search.png)
+![faceted_search.png](https://github.com/redis-developer/demo-movie-app-redisearch-python/tree/master/docs/faceted_search.png)
 
 **Example : _All the movies that contains the string "`war`"_**
 
