@@ -13,9 +13,9 @@
   "redis_features": ["Search"],
   "redis_modules": ["RediSearch"],
   "app_image_urls": [
-    "https://github.com/redis-developer/demo-movie-app-redisearch-python/blob/master/img.png",
-    "https://github.com/redis-developer/demo-movie-app-redisearch-python/blob/master/basic_search.png",
-    "https://github.com/redis-developer/demo-movie-app-redisearch-python/blob/master/faceted_search.png"
+    "https://raw.githubusercontent.com/redis-developer/demo-movie-app-redisearch-python/master/img.png",
+    "hhttps://raw.githubusercontent.com/redis-developer/demo-movie-app-redisearch-python/master/basic_search.png",
+    "https://raw.githubusercontent.com/redis-developer/demo-movie-app-redisearch-python/master/faceted_search.png"
   ],
   "youtube_url": "",
   "special_tags": [],
