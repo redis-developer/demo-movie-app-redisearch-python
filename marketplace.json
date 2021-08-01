@@ -4,6 +4,7 @@
   "type": "App",
   "contributed_by": "Redis Labs",
   "repo_url": "https://github.com/redis-developer/demo-movie-app-redisearch-python",
+  "preview_image_url": "https://raw.githubusercontent.com/redis-developer/demo-movie-app-redisearch-python/master/images/app_preview_image.png",
   "download_url": "https://github.com/redis-developer/demo-movie-app-redisearch-python/archive/main.zip",
   "hosted_url": "",
   "quick_deploy": "false",
