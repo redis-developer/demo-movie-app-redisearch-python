@@ -1,7 +1,7 @@
 {
   "app_name": "A Movie Database Demo app using Python & RediSearch", 
   "description": "A Movie Database Demo app in Python based on Redisearch capabilities",
-  "type": "App",
+  "type": "Building Block",
   "contributed_by": "Redis Labs",
   "repo_url": "https://github.com/redis-developer/demo-movie-app-redisearch-python",
   "preview_image_url": "https://raw.githubusercontent.com/redis-developer/demo-movie-app-redisearch-python/master/images/app_preview_image.png",
